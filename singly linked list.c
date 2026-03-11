@@ -2,24 +2,22 @@
 #include <stdlib.h>
 
 struct node {
-    int data; // Book ID
+    int book_id;
     struct node *next;
 };
 
 struct node *head = NULL;
 
-// Operation: High-priority book (Add at start)
-void insert_at_beginning(int data) {
+void insert_at_beginning(int book_id) {
     struct node *newnode = (struct node*)malloc(sizeof(struct node));
-    newnode->data = data;
-    newnode->next = head; // Point new node to current head
-    head = newnode;       // Update head to new node
+    newnode->book_id = book_id;
+    newnode->next = head;
+    head = newnode;
 }
 
-// Operation: Normal book (Add at end)
-void insert_at_end(int data) {
+void insert_at_end(int book_id) {
     struct node *newnode = (struct node*)malloc(sizeof(struct node));
-    newnode->data = data;
+    newnode->book_id = book_id;
     newnode->next = NULL;
 
     if (head == NULL) {
@@ -34,54 +32,50 @@ void insert_at_end(int data) {
     temp->next = newnode;
 }
 
-// Operation: Book returned (Delete by ID)
 void delete_node(int book_id) {
     struct node *temp = head, *prev = NULL;
 
-    // If head node itself holds the book ID
-    if (temp != NULL && temp->data == book_id) {
+    if (temp != NULL && temp->book_id == book_id) {
         head = temp->next;
         free(temp);
         return;
     }
 
-    // Search for the book ID
-    while (temp != NULL && temp->data != book_id) {
+    while (temp != NULL && temp->book_id != book_id) {
         prev = temp;
         temp = temp->next;
     }
 
-    // If ID was not present in list
     if (temp == NULL) {
         printf("Book ID %d not found.\n", book_id);
         return;
     }
 
-    // Unlink the node from linked list
     prev->next = temp->next;
     free(temp);
 }
 
-// Operation: Display all issued books
 void traverse() {
     struct node *temp = head;
+
     if (head == NULL) {
         printf("No books currently issued.\n");
         return;
     }
+
     printf("Issued Book IDs: ");
     while (temp != NULL) {
-        printf("%d -> ", temp->data);
+        printf("%d -> ", temp->book_id);
         temp = temp->next;
     }
     printf("NULL\n");
 }
 
 int main() {
-    insert_at_end(101);        // Normal book
-    insert_at_end(102);        // Normal book
-    insert_at_beginning(999);  // High-priority book
-   
+    insert_at_end(101);
+    insert_at_end(102);
+    insert_at_beginning(999);
+
     printf("After issuing books:\n");
     traverse();
 
